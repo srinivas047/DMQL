@@ -14,6 +14,15 @@ def connectdb():
         password='Srinivas@047')
     return conn
 
+def get_movieDetails(sql, val):
+    conn = connectdb()
+    cur = conn.cursor()
+    cur.execute(sql, val)
+
+    details = cur.fetchall()
+
+    return details
+
 @app.route('/',methods=('GET', 'POST'))
 def Initialize():
     conn = connectdb()
@@ -30,9 +39,9 @@ def Initialize():
     cur.execute('SELECT distinct genre from movies_genres LIMIT 1000')
     movies_genres = cur.fetchall()
 
-    cur.execute("SELECT * from movies where rating != 'NULL' order by rating DESC")
+    cur.execute("SELECT * from movies where rating != 'NULL' order by rating DESC LIMIT 100")
     movies = cur.fetchall()
-    print(movies[:5])
+    # print(movies[:5])
 
     # print(actorslastnames[:5])
 
@@ -53,7 +62,6 @@ def Initialize():
         genredetails.append(i[0])
 
     return render_template('index.html', moviedetails=movies, actordetails=actordetails, directordetails=directordetails, movies_genresdetails=movies_genresdetails, genredetails=genredetails,)
-    # return "success"
 
 @app.route('/recommendations', methods=('GET', 'POST'))
 def recommendations():
@@ -64,22 +72,20 @@ def recommendations():
         genre = request.form['genre']
 
         if actor_name == "" and director_name == "" and year == "" and genre == "":
+            sql = "SELECT M.id, M.name, M.rating, G.genre, M.availability from movies M, movies_genres G where M.id = G.movie_id and rating != 'NULL' and rating >= '7.5' order by rating DESC"  
+
             conn = connectdb()
             cur = conn.cursor()
-            sql = "SELECT * from movies where rating != 'NULL' order by rating DESC" 
-            val = (year, 7)
-            cur.execute(sql, val)
+            cur.execute(sql)
             moviedetails = cur.fetchall()
             moviedetails = moviedetails[:5]
 
             return render_template('results.html', moviedetails=moviedetails)
-            
-        conn = connectdb()
-        cur = conn.cursor()
-        sql = "SELECT * from movies  where year = %s and rating >= '%s' and rating != 'NULL' order by rating DESC" 
-        val = (year, 7)
-        cur.execute(sql, val)
-        moviedetails = cur.fetchall()
+    
+        sql = "select M.id, M.name, M.rating, G.genre, M.availability from movies M, movies_genres G where M.id = G.movie_id  and rating != 'NULL' and genre = %s and M.year = %s order by rating DESC" 
+        val = (genre,year)
+
+        moviedetails = get_movieDetails(sql, val)
         moviedetails = moviedetails[:5]
 
         return render_template('results.html', moviedetails=moviedetails)
@@ -204,7 +210,7 @@ def delete():
 
     return "Success"
 
-
+# Need to Complete
 @app.route("/TopfiveDirectors", methods=['POST'])
 def TopfiveDirectors():
     if request.method == 'POST':
