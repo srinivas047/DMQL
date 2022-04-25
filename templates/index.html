@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<style>
+input[type=text], select {
+  width: 20%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+input[type=submit] {
+  width: 12%;
+  background-color: #4CAF50;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+input[type=submit]:hover {
+  background-color: #45a049;
+}
+
+#InputDetails {
+  border-radius: 5px;
+  /* background-color: #f2f2f2; */
+  padding: 20px;
+}
+
+body {
+  padding: 20px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+h1 {
+    text-align: center; 
+}
+
+button {
+  width: 12%;
+  background-color: #4CAF50;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+
+#headings {
+  background-color: #f2f2f2;
+  text-align: center; 
+}
+
+#mainHeading {
+  background-color: #f2f2f2;
+}
+
+
+.row {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+}
+.block {
+  margin-left: 5%;
+  width: 100%;
+}
+
+#SQL_queries {
+  margin-left: 5%;
+}
+
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+
+
+
+</script>
+<div id="mainHeading">
+<h1>Welcome to Movies Recommendation Application</h1>
+<hr>
+</div>
+
+<!-- ################################################################ Recommend Movies ################################################################ -->
+<body>
+<br>
+<div id = "InputDetails" class = "flex-container">
+  <form method="post" action="">
+
+    <div class = "row">
+    <div class = "block">
+    <label for="actorname">Actor Name</label>
+    <br>
+    <select id="actor" name="actor">
+        {% for opt in QueryDetails %}
+            <option>
+            {{ opt }}
+            </option>
+        {% endfor %}
+    </select>
+    </div>
+    <br>
+
+    <div class = "block">
+    <label for="directorname">Director Name</label>
+    <br>
+    <select id="director" name="director">
+        {% for opt in QueryDetails %}
+            <option>
+            {{ opt }}
+            </option>
+        {% endfor %}
+    </select>
+    </div>
+  </div>
+    <br>
+
+    <div class = "row">
+    <div class = "block">
+    <label for="year">Year</label>
+    <br>
+    <select id="year" name="year">
+        {% for opt in QueryDetails %}
+            <option>
+            {{ opt }}
+            </option>
+        {% endfor %}
+    </select>
+  </div>
+    <br>
+
+    <div class = "block">
+      <label for="genre">Genre</label>
+      <br>
+      <select id="genre" name="genre">
+          {% for opt in QueryDetails %}
+              <option>
+              {{ opt }}
+              </option>
+          {% endfor %}
+      </select>
+    </div>
+    </div>
+      <br>
+
+    <input id = 'submit' type="submit" value="Submit" style="margin-left: 5%;">
+  </form>
+</div>
+<br>
+
+<!-- ################################################################SQL Queries################################################################ -->
+<div id="headings">
+<h2>SQL Queries</h2>
+<hr>
+</div>
+
+<div id="SQL_queries">
+<div id="Q1">
+<p>Query 1: Select Male Actors with last name Parish</p>
+<hr style="width: 26%; margin-left:0;">
+<form action="/select1" method="post">
+  <button name="query_1" type="submit" class="btn btn-success">Execute Query 1</button>
+</form>
+</div>
+<br>
+<!-- <div id="Q2">
+<p>Select Male Actors with last name asasas</p>
+<form action="/select1" method="post">
+  <button name="query_2" type="submit">Execute Query 2</button>
+</form>
+</div>
+<br> -->
+<div id="Q3">
+  <p>Query 3: Insert a new records to Actor, Director relations</p>
+  <hr style="width: 30%; margin-left:0;">
+  <form action="/insert" method="post">
+
+    <p>* Insert Actor table details</p>
+    <input type="text" name="actorID" placeholder="Enter Actor ID">
+    <input type="text" name="actorfname" placeholder="Enter Actor First Name">
+    <input type="text" name="actorlname" placeholder="Enter Actor Last Name">
+    <input type="text" name="actorgender" placeholder="Enter Actor Gender">
+    <br>
+    <p>* Insert Director table details</p>
+    <input type="text" name="directorID" placeholder="Enter Director ID">
+    <input type="text" name="directorfname" placeholder="Enter Director First Name">
+    <input type="text" name="directorlname" placeholder="Enter Director Last Name">
+    <br>
+    <button name="query_3" type="submit">Execute Query 3</button>
+  </form>
+  </div>
+  <br>
+
+  <div id="Q4">
+    <p>Query 4: Update a record from Actor, Director relations</p>
+    <hr style="width: 29%; margin-left:0;">
+    <form action="/update" method="post">
+      <p>* Insert Actor table details</p>
+      <input type="text" name="actorID" placeholder="Enter Actor ID">
+      <input type="text" name="actorfname" placeholder="Enter Actor First Name">
+      <br>
+      <p>* Insert Director table details</p>
+    <input type="text" name="directorID" placeholder="Enter Director ID">
+    <input type="text" name="directorlname" placeholder="Enter Director Last Name">
+    <br>
+      <button name="query_4" type="submit">Execute Query 4</button>
+    </form>
+    </div>
+    <br>
+
+    <div id="Q5">
+      <p>Query 5: Delete a record from Actor relation</p>
+      <hr style="width: 23.5%; margin-left:0;">
+      <form action="/delete" method="post">
+        <input type="text" name="actorID" placeholder="Enter Actor ID">
+        <br>
+        <button name="query_5" type="submit">Execute Query 5</button>
+      </form>
+      </div>
+      <br>
+</div>
+
+
+</body>
+</html>
+
+
