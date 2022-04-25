@@ -11,6 +11,16 @@ input[type=text], select {
   box-sizing: border-box;
 }
 
+input[type=text1], select {
+  width: 35%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
 input[type=submit] {
   width: 12%;
   background-color: #4CAF50;
@@ -56,10 +66,12 @@ button {
 #headings {
   background-color: #f2f2f2;
   text-align: center; 
+  padding: 3px;
 }
 
 #mainHeading {
   background-color: #f2f2f2;
+  padding: 3px;
 }
 
 
@@ -70,7 +82,7 @@ button {
   justify-content: left;
 }
 .block {
-  margin-left: 5%;
+  margin-left: 0%;
   width: 100%;
 }
 
@@ -78,158 +90,221 @@ button {
   margin-left: 5%;
 }
 
+select {
+  width:50%; 
+}
+
 </style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
 
-
-
 </script>
 <div id="mainHeading">
-<h1>Welcome to Movies Recommendation Application</h1>
+<h1>Welcome to Movies Rental Application</h1>
 <hr>
 </div>
 
-<!-- ################################################################ Recommend Movies ################################################################ -->
+<!-- ################################################################ Functionalities ################################################################ -->
 <body>
-<br>
-<div id = "InputDetails" class = "flex-container">
-  <form method="post" action="">
-
-    <div class = "row">
-    <div class = "block">
-    <label for="actorname">Actor Name</label>
-    <br>
-    <select id="actor" name="actor">
-        {% for opt in QueryDetails %}
-            <option>
-            {{ opt }}
-            </option>
-        {% endfor %}
-    </select>
-    </div>
-    <br>
-
-    <div class = "block">
-    <label for="directorname">Director Name</label>
-    <br>
-    <select id="director" name="director">
-        {% for opt in QueryDetails %}
-            <option>
-            {{ opt }}
-            </option>
-        {% endfor %}
-    </select>
-    </div>
-  </div>
-    <br>
-
-    <div class = "row">
-    <div class = "block">
-    <label for="year">Year</label>
-    <br>
-    <select id="year" name="year">
-        {% for opt in QueryDetails %}
-            <option>
-            {{ opt }}
-            </option>
-        {% endfor %}
-    </select>
-  </div>
-    <br>
-
-    <div class = "block">
-      <label for="genre">Genre</label>
+<div id = "InputDetails" class = "row">
+  <div id="Rent" style = "margin-left: 4.5%" class = "block">
+    <p>Rent a Movie</p>
+    <form action="/rent" method="post">
+      <input type="text1" name="movieID" placeholder="Enter Movie ID">
       <br>
-      <select id="genre" name="genre">
-          {% for opt in QueryDetails %}
+      <button name="Rent" type="submit" style = "width: 20%";>Rent!</button>
+    </form>
+    </div>
+    <br>
+    <div id="get" style = "margin-left: 4.5%" class = "block">
+      <p>Get Movie Details</p>
+      <form action="/getdetails" method="post">
+        <input type="text1" name="movieID" placeholder="Enter Movie ID">
+        <br>
+        <button name="get" type="submit" style = "width: 20%">Get Details</button>
+      </form>
+  </div>
+</div>
+<br>
+
+<!-- ################################################################SQL Queries################################################################ -->
+<div id="headings">
+<h2>Application Functionalities</h2>
+<hr>
+</div>
+
+<div id="SQL_queries">
+  <p>1: Search Movies</p>
+  <hr style="width: 30%; margin-left:0;">
+  <div id="Q1" style = "margin-left: 0%">
+    <form method="post" action="/recommendations" >
+
+      <div class = "row">
+      <div class = "block">
+      <label for="actorname">Actor Name</label>
+      <br>
+      <select id="actor" name="actor">
+        <option value="">None</option>
+          {% for opt in actordetails %}
+              <option>
+              {{ opt }}
+              </option>
+          {% endfor %}
+      </select>
+      </div>
+      <br>
+  
+      <div class = "block">
+      <label for="directorname">Director Name</label>
+      <br>
+      <select id="director" name="director">
+        <option value="">None</option>
+          {% for opt in directordetails %}
+              <option>
+              {{ opt }}
+              </option>
+          {% endfor %}
+      </select>
+      </div>
+    </div>
+      <br>
+  
+      <div class = "row">
+      <div class = "block">
+      <label for="year">Year</label>
+      <br>
+      <select id="year" name="year">
+        <option value="">None</option>
+          {% for opt in moviesdetails %}
               <option>
               {{ opt }}
               </option>
           {% endfor %}
       </select>
     </div>
-    </div>
       <br>
-
-    <input id = 'submit' type="submit" value="Submit" style="margin-left: 5%;">
-  </form>
-</div>
-<br>
-
-<!-- ################################################################SQL Queries################################################################ -->
-<div id="headings">
-<h2>SQL Queries</h2>
-<hr>
-</div>
-
-<div id="SQL_queries">
-<div id="Q1">
-<p>Query 1: Select Male Actors with last name Parish</p>
-<hr style="width: 26%; margin-left:0;">
-<form action="/select1" method="post">
-  <button name="query_1" type="submit" class="btn btn-success">Execute Query 1</button>
-</form>
-</div>
-<br>
-<!-- <div id="Q2">
-<p>Select Male Actors with last name asasas</p>
-<form action="/select1" method="post">
-  <button name="query_2" type="submit">Execute Query 2</button>
-</form>
-</div>
-<br> -->
-<div id="Q3">
-  <p>Query 3: Insert a Movie</p>
-  <hr style="width: 30%; margin-left:0;">
-  <form action="/insert" method="post">
-    <p>Insert Movie details</p>
-    <input type="text" name="actorID" placeholder="Enter Movie ID">
-    <input type="text" name="actorfname" placeholder="Enter Movie Name">
-    <input type="text" name="actorlname" placeholder="Enter Released Year">
-    <input type="text" name="actorgender" placeholder="Enter Genre">
-    <input type="text" name="actorgender" placeholder="Enter Rating">
-    <input type="text" name="actorID" placeholder="Enter Actor ID">
-    <input type="text" name="actorfname" placeholder="Enter Actor First Name">
-    <input type="text" name="actorlname" placeholder="Enter Actor Last Name">
-    <input type="text" name="actorgender" placeholder="Enter Actor Gender">
-    <input type="text" name="actorgender" placeholder="Enter Actor Role">
-    <input type="text" name="actorID" placeholder="Enter Director ID">
-    <input type="text" name="actorfname" placeholder="Enter Director First Name">
-    <input type="text" name="actorlname" placeholder="Enter Director Last Name">
-    <button name="query_3" type="submit">Execute Query 3</button>
-  </form>
-  </div>
-  <br>
-
-  <div id="Q4">
-    <p>Query 4: Update a record from Actor, Director relations</p>
-    <hr style="width: 29%; margin-left:0;">
-    <form action="/update" method="post">
-      <p>* Insert Actor table details</p>
-      <input type="text" name="actorID" placeholder="Enter Actor ID">
-      <input type="text" name="actorfname" placeholder="Enter Actor First Name">
+  
+      <div class = "block">
+        <label for="genre">Genre</label>
+        <br>
+        <select id="genre" name="genre">
+          <option value="">None</option>
+            {% for opt in genredetails %}
+                <option>
+                {{ opt }}
+                </option>
+            {% endfor %}
+        </select>
+      </div>
+      </div>
+        <br>
+  
+      <input id = 'submit' type="submit" value="Submit" style="margin-left: 0%;">
       <br>
-      <p>* Insert Director table details</p>
-    <input type="text" name="directorID" placeholder="Enter Director ID">
-    <input type="text" name="directorlname" placeholder="Enter Director Last Name">
-    <br>
-      <button name="query_4" type="submit">Execute Query 4</button>
     </form>
     </div>
     <br>
 
-    <div id="Q5">
-      <p>Query 5: Delete a record from Actor relation</p>
-      <hr style="width: 23.5%; margin-left:0;">
-      <form action="/delete" method="post">
+  <div id="Q2">
+    <p>2: Sell a Movie</p>
+    <hr style="width: 30%; margin-left:0;">
+    <form action="/insert" method="post">
+      <p>* Enter Movie details</p>
+      <input type="text" name="movieID" placeholder="Enter Movie ID">
+      <input type="text" name="moviename" placeholder="Enter Movie Name">
+      <input type="text" name="year" placeholder="Enter Released Year">
+      <input type="text" name="genre" placeholder="Enter Genre">
+      <input type="text" name="rating" placeholder="Enter Rating">
+      <input type="text" name="actorID" placeholder="Enter Actor ID">
+      <input type="text" name="actorfname" placeholder="Enter Actor First Name">
+      <input type="text" name="actorlname" placeholder="Enter Actor Last Name">
+      <input type="text" name="actorgender" placeholder="Enter Actor Gender">
+      <input type="text" name="actorrole" placeholder="Enter Actor Role">
+      <input type="text" name="DirectorID" placeholder="Enter Director ID">
+      <input type="text" name="Directorfname" placeholder="Enter Director First Name">
+      <input type="text" name="Directorlname" placeholder="Enter Director Last Name">
+      <br>
+      <button name="sell" type="submit">Sell</button>
+    </form>
+    </div>
+    <br>
+
+    <div id="Q3">
+      <p>3: Update Records</p>
+      <hr style="width: 29%; margin-left:0;">
+      <form action="/update" method="post">
+      <div>
+        <p>* Update Actor Last Name</p>
         <input type="text" name="actorID" placeholder="Enter Actor ID">
+        <input type="text" name="actorfname" placeholder="Enter Actor First Name">
         <br>
-        <button name="query_5" type="submit">Execute Query 5</button>
+      </div>
+      <div>
+        <p>* Update Director Last Name</p>
+      <input type="text" name="directorID" placeholder="Enter Director ID">
+      <input type="text" name="directorlname" placeholder="Enter Director Last Name">
+      <br>
+      </div>
+
+      <p>* Update Movie Rating</p>
+      <input type="text" name="movieID" placeholder="Enter Movie ID">
+      <input type="text" name="movieRating" placeholder="Enter Movie Rating">
+      <br>
+    </div>
+        <button name="update" type="submit">Update</button>
       </form>
       </div>
       <br>
-</div>
+    
+      <div id="Q4" style="margin-left:4.5%;">
+        <p>4: Delete a movie</p>
+        <hr style="width: 23.5%; margin-left:0%;">
+        <form action="/delete" method="post">
+          <input type="text" name="movieID" placeholder="Enter Movie ID">
+          <br>
+          <button name="delete" type="submit">Delete</button>
+        </form>
+        </div>
+        <br>
+
+      <div id="Q5" style="margin-left:4.5%;">
+      <p>5: Get 5 Top Rated Movies of a Director that are available for rent</p>
+      <hr style="width: 26%; margin-left:0;">
+      <form action="/TopfiveDirectors" method="post">
+        <label for="director">Select Director</label>
+          <br>
+          <select id="director" name="director">
+            <option value="">None</option>
+              {% for opt in directordetails %}
+                  <option>
+                  {{ opt }}
+                  </option>
+              {% endfor %}
+          </select>
+        <button name="director" type="submit" class="btn btn-success">Get Top Directors</button>
+      </form>
+      </div>  
+    <br>
+
+    <div id="Q6" style="margin-left:4.5%;">
+      <p>6: Get 5 Top Rated Movies based on Genre that are available for rent</p>
+      <hr style="width: 26%; margin-left:0;">
+      <form action="/TopfiveMovies" method="post">
+        <label for="genres">Select Genre</label>
+          <br>
+          <select id="genres" name="genres">
+            <option value="">None</option>
+              {% for opt in genredetails %}
+                  <option>
+                  {{ opt }}
+                  </option>
+              {% endfor %}
+          </select>
+        <button name="genres" type="submit" class="btn btn-success">Get Top Movies</button>
+      </form>
+      </div>  
+    <br>
+
 
 
 </body>

@@ -2,14 +2,14 @@
 <html>
 <head>
 <style>
-#donors {
+#movies {
   font-family: Arial, Helvetica, sans-serif;
   border-collapse: collapse;
   width: 60%;
   margin-left: 20%;
 }
 
-#donors td, #donors th {
+#movies td, #movies th {
   border: 1px solid #ddd;
   padding: 8px;
 }
@@ -18,11 +18,11 @@ h3 {
     margin-left: 20%;
 }
 
-#donors tr:nth-child(even){background-color: #f2f2f2;}
+#movies tr:nth-child(even){background-color: #f2f2f2;}
 
-#donors tr:hover {background-color: #ddd;}
+#movies tr:hover {background-color: #ddd;}
 
-#donors th {
+#movies th {
   padding-top: 12px;
   padding-bottom: 12px;
   text-align: left;
@@ -47,16 +47,16 @@ body {
 </head>
 <body>
   <div id="mainHeading">
-  <h1>Movie Details</h1>
+  <h1>Top 5 Movie Details</h1>
   </div>
 <hr>
-<table id="donors">
+<table id="movies">
     <th>ID</th>
     <th>Movie Name</th>
-    <th>Year</th>
     <th>Rating</th>
+    <th>Genre</th>
     <th>Availability</th>
-    {% for user in moviedetails %}
+    {% for user in TopMovies %}
     <tr>
       <td> {{user[0]}} </td>
       <td> {{user[1]}} </td>
