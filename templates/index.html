@@ -180,21 +180,23 @@ button {
 </div>
 <br> -->
 <div id="Q3">
-  <p>Query 3: Insert a new records to Actor, Director relations</p>
+  <p>Query 3: Insert a Movie</p>
   <hr style="width: 30%; margin-left:0;">
   <form action="/insert" method="post">
-
-    <p>* Insert Actor table details</p>
+    <p>Insert Movie details</p>
+    <input type="text" name="actorID" placeholder="Enter Movie ID">
+    <input type="text" name="actorfname" placeholder="Enter Movie Name">
+    <input type="text" name="actorlname" placeholder="Enter Released Year">
+    <input type="text" name="actorgender" placeholder="Enter Genre">
+    <input type="text" name="actorgender" placeholder="Enter Rating">
     <input type="text" name="actorID" placeholder="Enter Actor ID">
     <input type="text" name="actorfname" placeholder="Enter Actor First Name">
     <input type="text" name="actorlname" placeholder="Enter Actor Last Name">
     <input type="text" name="actorgender" placeholder="Enter Actor Gender">
-    <br>
-    <p>* Insert Director table details</p>
-    <input type="text" name="directorID" placeholder="Enter Director ID">
-    <input type="text" name="directorfname" placeholder="Enter Director First Name">
-    <input type="text" name="directorlname" placeholder="Enter Director Last Name">
-    <br>
+    <input type="text" name="actorgender" placeholder="Enter Actor Role">
+    <input type="text" name="actorID" placeholder="Enter Director ID">
+    <input type="text" name="actorfname" placeholder="Enter Director First Name">
+    <input type="text" name="actorlname" placeholder="Enter Director Last Name">
     <button name="query_3" type="submit">Execute Query 3</button>
   </form>
   </div>
