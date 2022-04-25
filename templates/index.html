@@ -1,101 +1,11 @@
 <!DOCTYPE html>
 <html>
-<style>
-input[type=text], select {
-  width: 20%;
-  padding: 12px 20px;
-  margin: 8px 0;
-  display: inline-block;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-}
-
-input[type=text1], select {
-  width: 35%;
-  padding: 12px 20px;
-  margin: 8px 0;
-  display: inline-block;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-}
-
-input[type=submit] {
-  width: 12%;
-  background-color: #4CAF50;
-  color: white;
-  padding: 14px 20px;
-  margin: 8px 0;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-input[type=submit]:hover {
-  background-color: #45a049;
-}
-
-#InputDetails {
-  border-radius: 5px;
-  /* background-color: #f2f2f2; */
-  padding: 20px;
-}
-
-body {
-  padding: 20px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-}
-
-h1 {
-    text-align: center; 
-}
-
-button {
-  width: 12%;
-  background-color: #4CAF50;
-  color: white;
-  padding: 14px 20px;
-  margin: 8px 0;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-
-#headings {
-  background-color: #f2f2f2;
-  text-align: center; 
-  padding: 3px;
-}
-
-#mainHeading {
-  background-color: #f2f2f2;
-  padding: 3px;
-}
-
-
-.row {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: left;
-}
-.block {
-  margin-left: 0%;
-  width: 100%;
-}
-
-#SQL_queries {
-  margin-left: 5%;
-}
-
-select {
-  width:50%; 
-}
-
-</style>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+<link rel="stylesheet" type="text/css" href= "{{ url_for('static',filename='styles/style.css') }}">
+<script type="text/javascript" charset="utf8" src= "{{ url_for('static',filename='js/app.js') }}"></script>
 <script>
 
 </script>
@@ -104,11 +14,11 @@ select {
 <hr>
 </div>
 
-<!-- ################################################################ Functionalities ################################################################ -->
+<!-- ################################################################ Renting ################################################################ -->
 <body>
 <div id = "InputDetails" class = "row">
   <div id="Rent" style = "margin-left: 4.5%" class = "block">
-    <p>Rent a Movie</p>
+    <p style="color: #0074D9; font-weight: bold; font-style: italic;" >Rent a Movie</p>
     <form action="/rent" method="post">
       <input type="text1" name="movieID" placeholder="Enter Movie ID">
       <br>
@@ -117,7 +27,7 @@ select {
     </div>
     <br>
     <div id="get" style = "margin-left: 4.5%" class = "block">
-      <p>Get Movie Details</p>
+      <p style="color: #0074D9; font-weight: bold; font-style: italic;">Get Movie Details</p>
       <form action="/getdetails" method="post">
         <input type="text1" name="movieID" placeholder="Enter Movie ID">
         <br>
@@ -125,18 +35,69 @@ select {
       </form>
   </div>
 </div>
+  <br>
+  <div id="Sell" style = "margin-left: 5%" >
+    <p style="color: #0074D9; font-weight: bold; font-style: italic;">Sell a Movie</p>
+    <form action="/insert" method="post">
+      <p>* Enter Movie details</p>
+      <input type="text" name="movieID" placeholder="Enter Movie ID">
+      <input type="text" name="moviename" placeholder="Enter Movie Name">
+      <input type="text" name="year" placeholder="Enter Released Year">
+      <input type="text" name="genre" placeholder="Enter Genre">
+      <input type="text" name="rating" placeholder="Enter Rating">
+      <input type="text" name="actorID" placeholder="Enter Actor ID">
+      <input type="text" name="actorfname" placeholder="Enter Actor First Name">
+      <input type="text" name="actorlname" placeholder="Enter Actor Last Name">
+      <input type="text" name="actorgender" placeholder="Enter Actor Gender">
+      <input type="text" name="actorrole" placeholder="Enter Actor Role">
+      <input type="text" name="DirectorID" placeholder="Enter Director ID">
+      <input type="text" name="Directorfname" placeholder="Enter Director First Name">
+      <input type="text" name="Directorlname" placeholder="Enter Director Last Name">
+      <br>
+      <button name="sell" type="submit" style = "width: 10%">Sell</button>
+    </form>
+    </div>
+    <br>
+</div>
 <br>
 
-<!-- ################################################################SQL Queries################################################################ -->
+<!-- ################################################################Functionalities################################################################ -->
 <div id="headings">
 <h2>Application Functionalities</h2>
 <hr>
 </div>
 
 <div id="SQL_queries">
-  <p>1: Search Movies</p>
+  <div id="Q1" style="margin-left:0%">
+    <p style="color: #0074D9; font-weight: bold; font-style: italic;">1: Search for a Movie</p>
+    <hr style="width: 30%; margin-left:0;">
+    <table id="myTable" class="display" style="width: 95%;">
+      <thead>
+      <tr>
+        <th >ID</th>
+        <th >Movie Name</th>
+        <th >Year</th>
+        <th >Rating</th>
+        <th >Availability</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for user in moviedetails %}
+        <tr>
+          <td> {{user[0]}} </td>
+          <td> {{user[1]}} </td>
+          <td> {{user[2]}} </td>
+          <td> {{user[3]}} </td>
+          <td> {{user[4]}} </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    </div>  
+  <br>
+  <p style="color: #0074D9; font-weight: bold; font-style: italic;">2: Recommend Movies</p>
   <hr style="width: 30%; margin-left:0;">
-  <div id="Q1" style = "margin-left: 0%">
+  <div id="Q2" style = "margin-left: 0%">
     <form method="post" action="/recommendations" >
 
       <div class = "row">
@@ -175,7 +136,7 @@ select {
       <br>
       <select id="year" name="year">
         <option value="">None</option>
-          {% for opt in moviesdetails %}
+          {% for opt in movies_genresdetails %}
               <option>
               {{ opt }}
               </option>
@@ -205,33 +166,47 @@ select {
     </div>
     <br>
 
-  <div id="Q2">
-    <p>2: Sell a Movie</p>
-    <hr style="width: 30%; margin-left:0;">
-    <form action="/insert" method="post">
-      <p>* Enter Movie details</p>
-      <input type="text" name="movieID" placeholder="Enter Movie ID">
-      <input type="text" name="moviename" placeholder="Enter Movie Name">
-      <input type="text" name="year" placeholder="Enter Released Year">
-      <input type="text" name="genre" placeholder="Enter Genre">
-      <input type="text" name="rating" placeholder="Enter Rating">
-      <input type="text" name="actorID" placeholder="Enter Actor ID">
-      <input type="text" name="actorfname" placeholder="Enter Actor First Name">
-      <input type="text" name="actorlname" placeholder="Enter Actor Last Name">
-      <input type="text" name="actorgender" placeholder="Enter Actor Gender">
-      <input type="text" name="actorrole" placeholder="Enter Actor Role">
-      <input type="text" name="DirectorID" placeholder="Enter Director ID">
-      <input type="text" name="Directorfname" placeholder="Enter Director First Name">
-      <input type="text" name="Directorlname" placeholder="Enter Director Last Name">
-      <br>
-      <button name="sell" type="submit">Sell</button>
-    </form>
-    </div>
+    <div id="Q3" style="margin-left:0%;">
+      <p style="color: #0074D9; font-weight: bold; font-style: italic;">3: Get 5 Top Rated Movies of a Director that are available for rent</p>
+      <hr style="width: 30%; margin-left:0;">
+      <form action="/TopfiveDirectors" method="post">
+        <label for="director">Select Director</label>
+          <br>
+          <select id="director" name="director">
+            <option value="">None</option>
+              {% for opt in directordetails %}
+                  <option>
+                  {{ opt }}
+                  </option>
+              {% endfor %}
+          </select>
+        <button name="director" type="submit" class="btn btn-success">Get Top Directors</button>
+      </form>
+      </div>  
     <br>
 
-    <div id="Q3">
-      <p>3: Update Records</p>
-      <hr style="width: 29%; margin-left:0;">
+    <div id="Q4" style="margin-left:0%;">
+      <p style="color: #0074D9; font-weight: bold; font-style: italic;">4: Get 5 Top Rated Movies based on Genre that are available for rent</p>
+      <hr style="width: 30%; margin-left:0;">
+      <form action="/TopfiveMovies" method="post">
+        <label for="genres">Select Genre</label>
+          <br>
+          <select id="genres" name="genres">
+            <option value="">None</option>
+              {% for opt in genredetails %}
+                  <option>
+                  {{ opt }}
+                  </option>
+              {% endfor %}
+          </select>
+        <button name="genres" type="submit" class="btn btn-success">Get Top Movies</button>
+      </form>
+      </div>  
+    <br>
+
+    <div id="Q5">
+      <p style="color: #0074D9; font-weight: bold; font-style: italic;">5: Update Records</p>
+      <hr style="width: 30%; margin-left:0;">
       <form action="/update" method="post">
       <div>
         <p>* Update Actor Last Name</p>
@@ -256,9 +231,9 @@ select {
       </div>
       <br>
     
-      <div id="Q4" style="margin-left:4.5%;">
-        <p>4: Delete a movie</p>
-        <hr style="width: 23.5%; margin-left:0%;">
+      <div id="Q6" style="margin-left:4.5%;">
+        <p style="color: #0074D9; font-weight: bold; font-style: italic;">6: Delete a movie</p>
+        <hr style="width: 30%; margin-left:0%;">
         <form action="/delete" method="post">
           <input type="text" name="movieID" placeholder="Enter Movie ID">
           <br>
@@ -267,43 +242,7 @@ select {
         </div>
         <br>
 
-      <div id="Q5" style="margin-left:4.5%;">
-      <p>5: Get 5 Top Rated Movies of a Director that are available for rent</p>
-      <hr style="width: 26%; margin-left:0;">
-      <form action="/TopfiveDirectors" method="post">
-        <label for="director">Select Director</label>
-          <br>
-          <select id="director" name="director">
-            <option value="">None</option>
-              {% for opt in directordetails %}
-                  <option>
-                  {{ opt }}
-                  </option>
-              {% endfor %}
-          </select>
-        <button name="director" type="submit" class="btn btn-success">Get Top Directors</button>
-      </form>
-      </div>  
-    <br>
-
-    <div id="Q6" style="margin-left:4.5%;">
-      <p>6: Get 5 Top Rated Movies based on Genre that are available for rent</p>
-      <hr style="width: 26%; margin-left:0;">
-      <form action="/TopfiveMovies" method="post">
-        <label for="genres">Select Genre</label>
-          <br>
-          <select id="genres" name="genres">
-            <option value="">None</option>
-              {% for opt in genredetails %}
-                  <option>
-                  {{ opt }}
-                  </option>
-              {% endfor %}
-          </select>
-        <button name="genres" type="submit" class="btn btn-success">Get Top Movies</button>
-      </form>
-      </div>  
-    <br>
+      
 
 
 

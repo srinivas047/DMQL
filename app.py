@@ -18,17 +18,21 @@ def connectdb():
 def Initialize():
     conn = connectdb()
     cur = conn.cursor()
-    cur.execute('SELECT distinct last_name from actors')
+    cur.execute('SELECT distinct last_name from actors LIMIT 1000')
     actorslastnames = cur.fetchall()
 
-    cur.execute('SELECT distinct last_name from directors')
+    cur.execute('SELECT distinct last_name from directors LIMIT 1000')
     directorslastnames = cur.fetchall()
 
-    cur.execute('SELECT distinct year from movies')
+    cur.execute("SELECT distinct year from movies where rating != 'NULL' LIMIT 1000")
     moviesyear = cur.fetchall()
 
-    cur.execute('SELECT distinct genre from movies_genres')
+    cur.execute('SELECT distinct genre from movies_genres LIMIT 1000')
     movies_genres = cur.fetchall()
+
+    cur.execute("SELECT * from movies where rating != 'NULL' order by rating DESC")
+    movies = cur.fetchall()
+    print(movies[:5])
 
     # print(actorslastnames[:5])
 
@@ -40,15 +44,15 @@ def Initialize():
     for i in directorslastnames:
         directordetails.append(i[0])
     
-    moviesdetails = []
+    movies_genresdetails = []
     for i in moviesyear:
-        moviesdetails.append(i[0])
+        movies_genresdetails.append(i[0])
     
     genredetails = []
     for i in movies_genres:
         genredetails.append(i[0])
 
-    return render_template('index.html', actordetails=actordetails, directordetails=directordetails, moviesdetails=moviesdetails, genredetails=genredetails,)
+    return render_template('index.html', moviedetails=movies, actordetails=actordetails, directordetails=directordetails, movies_genresdetails=movies_genresdetails, genredetails=genredetails,)
     # return "success"
 
 @app.route('/recommendations', methods=('GET', 'POST'))
@@ -84,9 +88,7 @@ def recommendations():
 def rent():
     if request.method == 'POST':
         
-        print("hi")
         movieID = request.form['movieID']
-        print(movieID)
         conn = connectdb()
         cur = conn.cursor()
         sql = "UPDATE movies SET availability = 'No' WHERE id = %s"
@@ -101,7 +103,6 @@ def getdetails():
     if request.method == 'POST':
         
         movieID = request.form['movieID']
-        print(movieID)
         conn = connectdb()
         cur = conn.cursor()
         sql = "SELECT * from movies where id = %s" 
@@ -212,7 +213,6 @@ def TopfiveDirectors():
         cur = conn.cursor() 
         cur.execute("")
         Query1_results = cur.fetchall()
-        print(Query1_results)
 
         return render_template('results.html', Query1_results=Query1_results)
 
@@ -228,7 +228,6 @@ def TopfiveMovies():
         cur.execute(sql, val)
         TopMovies = cur.fetchall()
         TopMovies = TopMovies[:5]
-        print(TopMovies)
 
         return render_template('TopMovies.html', TopMovies=TopMovies)
 
