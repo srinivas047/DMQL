@@ -23,6 +23,7 @@ def get_movieDetails(sql, val):
 
     return details
 
+# Initialization
 @app.route('/',methods=('GET', 'POST'))
 def Initialize():
     conn = connectdb()
@@ -63,33 +64,7 @@ def Initialize():
 
     return render_template('index.html', moviedetails=movies, actordetails=actordetails, directordetails=directordetails, movies_genresdetails=movies_genresdetails, genredetails=genredetails,)
 
-@app.route('/recommendations', methods=('GET', 'POST'))
-def recommendations():
-    if request.method == 'POST':
-        actor_name = request.form['actor']
-        director_name = request.form['director']
-        year = request.form['year']
-        genre = request.form['genre']
-
-        if actor_name == "" and director_name == "" and year == "" and genre == "":
-            sql = "SELECT M.id, M.name, M.rating, G.genre, M.availability from movies M, movies_genres G where M.id = G.movie_id and rating is not NULL and rating >= '7.5' order by rating DESC"  
-
-            conn = connectdb()
-            cur = conn.cursor()
-            cur.execute(sql)
-            moviedetails = cur.fetchall()
-            moviedetails = moviedetails[:5]
-
-            return render_template('results.html', moviedetails=moviedetails)
-    
-        sql = "select M.id, M.name, M.rating, G.genre, M.availability from movies M, movies_genres G where M.id = G.movie_id  and rating is not NULL and genre = %s and M.year = %s order by rating DESC" 
-        val = (genre,year)
-
-        moviedetails = get_movieDetails(sql, val)
-        moviedetails = moviedetails[:5]
-
-        return render_template('results.html', moviedetails=moviedetails)
-
+# Renting a Movie
 @app.route('/rent', methods=('GET', 'POST'))
 def rent():
     if request.method == 'POST':
@@ -103,6 +78,7 @@ def rent():
 
         return "Movie Rented Successfully!!"
 
+# Getting Movie Details
 @app.route('/getdetails', methods=('GET', 'POST'))
 def getdetails():
     if request.method == 'POST':
@@ -117,6 +93,7 @@ def getdetails():
 
         return render_template('GetDetails.html', moviedetails=moviedetails)
 
+# Sell a Movie
 @app.route("/sell", methods=['POST'])
 def sell():
     if request.method == 'POST':
@@ -144,25 +121,81 @@ def sell():
         val1 = (moviename, year, rating, availability, price)
         cur.execute(sql1, val1)
 
-        # sql1 = "INSERT INTO actors (id, first_name, last_name, gender) VALUES (%s, %s, %s, %s)"
-        # val1 = (actorID, actorfname, actorlname, actorgender)
-        # cur.execute(sql1, val1)
+        conn.commit()
 
 
-        # sql2 = "INSERT INTO directors (id, first_name, last_name) VALUES (%s, %s, %s)"
-        # val2 = (directorID, directorfname, directorlname)
+        # sql2 = "SELECT id from movies where name= %s and year = %s and rating = %s and availability = %s and price = %s"
+        # val2 = (moviename, year, rating, availability, price)
         # cur.execute(sql2, val2)
 
-        conn.commit()
+        # conn.commit()
 
     return "Movie Added Successfully!!"
 
+# Get Recommendations
+# Need to Complete
+@app.route('/recommendations', methods=('GET', 'POST'))
+def recommendations():
+    if request.method == 'POST':
+        actor_name = request.form['actor']
+        director_name = request.form['director']
+        year = request.form['year']
+        genre = request.form['genre']
+
+        if actor_name == "" and director_name == "" and year == "" and genre == "":
+            sql = "SELECT M.id, M.name, M.rating, G.genre, M.availability, M.year from movies M, movies_genres G where M.id = G.movie_id and rating is not NULL and rating >= '7.5' order by rating DESC LIMIT 5"  
+
+            conn = connectdb()
+            cur = conn.cursor()
+            cur.execute(sql)
+            TopMovies = cur.fetchall()
+            return render_template('TopMovies.html', TopMovies=TopMovies)
+
+        if actor_name != "" and director_name != "":
+            sql = "select M.id, M.name, M.rating, G.genre, M.availability, M.year from movies M, movies_genres G,  where M.id = G.movie_id  and rating is not NULL and genre = %s and M.year = %s order by rating DESC LIMIT 5" 
+            val = (genre,year)
+
+            TopMovies = get_movieDetails(sql, val)
+        return render_template('TopMovies.html', TopMovies=TopMovies)
+
+# Get Top Five Directors
+@app.route("/TopfiveDirectors", methods=['POST'])
+def TopfiveDirectors():
+    if request.method == 'POST':
+        first_name = request.form['director']
+        conn = connectdb()
+        cur = conn.cursor() 
+        sql = "SELECT A.*, B.director_id, C.first_name, C.last_name from movies A, movies_directors B, directors C where A.id = B.movie_id and B.director_id = C.id and rating is not NULL and C.first_name = %s order by A.rating DESC LIMIT 5"
+        val = (first_name,)
+        cur.execute(sql, val)
+        TopfiveDirectors = cur.fetchall()
+        # print(TopfiveDirectors[:5])
+
+        return render_template('TopDirectors.html', TopfiveDirectors=TopfiveDirectors)
+
+# Get Top Five Movies of a Genre
+@app.route("/TopfiveMovies", methods=['POST'])
+def TopfiveMovies():
+    if request.method == 'POST':
+        genre = request.form['genres']
+        conn = connectdb()
+        cur = conn.cursor() 
+
+        sql = "select M.id, M.name, M.rating, G.genre, M.availability,M.year from movies M, movies_genres G where M.id = G.movie_id  and rating is not NULL and genre = %s order by rating DESC"
+        val = (genre,)
+        cur.execute(sql, val)
+        TopMovies = cur.fetchall()
+        TopMovies = TopMovies[:5]
+
+        return render_template('TopMovies.html', TopMovies=TopMovies)
+
+# Update tables
 @app.route("/update", methods=['POST'])
 def update():
     if request.method == 'POST':
 
-        actorID = request.form['actorID']
-        actorfname = request.form['actorfname']
+        # actorID = request.form['actorID']
+        # actorfname = request.form['actorfname']
 
         directorID = request.form['directorID']
         directorlname = request.form['directorlname']
@@ -174,10 +207,10 @@ def update():
         cur = conn.cursor()
         # cur.execute("INSERT INTO actors (actorID, actorfname, actorlname, id) VALUES (%s, %s, %s, %s)")
 
-        if actorID != "" or actorfname !="":
-            sql1 = "UPDATE actors SET first_name = %s WHERE id = %s"
-            val1 = (actorfname, actorID)
-            cur.execute(sql1, val1)
+        # if actorID != "" or actorfname !="":
+        #     sql1 = "UPDATE actors SET first_name = %s WHERE id = %s"
+        #     val1 = (actorfname, actorID)
+        #     cur.execute(sql1, val1)
 
         if directorID != "" or directorlname !="":
             sql2 = "UPDATE directors SET last_name = %s WHERE id = %s"
@@ -193,6 +226,7 @@ def update():
 
     return "Details Updated Successfully!!"
 
+# Delete a Movie
 @app.route("/delete", methods=['POST'])
 def delete():
     if request.method == 'POST':
@@ -207,38 +241,6 @@ def delete():
         conn.commit()
 
     return "Deleted Successfully!!"
-
-# Need to Complete
-@app.route("/TopfiveDirectors", methods=['POST'])
-def TopfiveDirectors():
-    if request.method == 'POST':
-        first_name = request.form['director']
-
-        print(first_name)
-
-        conn = connectdb()
-        cur = conn.cursor() 
-        sql = "SELECT A.*, C.first_name from movies A, movies_directors B, directors C where A.id = B.movie_id and B.director_id = C.id and rating is not NULL and C.first_name = %s order by A.rating DESC LIMIT 5"
-        val = (first_name,)
-        cur.execute(sql, val)
-        TopfiveDirectors = cur.fetchall()
-
-        return render_template('TopDirectors.html', TopfiveDirectors=TopfiveDirectors)
-
-@app.route("/TopfiveMovies", methods=['POST'])
-def TopfiveMovies():
-    if request.method == 'POST':
-        genre = request.form['genres']
-        conn = connectdb()
-        cur = conn.cursor() 
-
-        sql = "select M.id, M.name, M.rating, G.genre, M.availability from movies M, movies_genres G where M.id = G.movie_id  and rating is not NULL and genre = %s order by rating DESC"
-        val = (genre,)
-        cur.execute(sql, val)
-        TopMovies = cur.fetchall()
-        TopMovies = TopMovies[:5]
-
-        return render_template('TopMovies.html', TopMovies=TopMovies)
 
 if __name__ == "__main__":
   app.run('0.0.0.0', port=5001, debug=True)

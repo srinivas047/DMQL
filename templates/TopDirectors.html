@@ -57,7 +57,9 @@ body {
     <th>Rating</th>
     <th>Availability</th>
     <th>Price</th>
+    <th>Director ID</th>
     <th>Director First Name</th>
+    <th>Director Last Name</th>
     {% for user in TopfiveDirectors %}
     <tr>
       <td> {{user[0]}} </td>
@@ -67,6 +69,8 @@ body {
       <td> {{user[4]}} </td>
       <td> {{user[5]}} </td>
       <td> {{user[6]}} </td>
+      <td> {{user[7]}} </td>
+      <td> {{user[8]}} </td>
     </tr>
     {% endfor %}
   </table>
