@@ -38,21 +38,19 @@
   <br>
   <div id="Sell" style = "margin-left: 5%" >
     <p style="color: #0074D9; font-weight: bold; font-style: italic;">Sell a Movie</p>
-    <form action="/insert" method="post">
+    <form action="/sell" method="post">
       <p>* Enter Movie details</p>
-      <input type="text" name="movieID" placeholder="Enter Movie ID">
       <input type="text" name="moviename" placeholder="Enter Movie Name">
       <input type="text" name="year" placeholder="Enter Released Year">
-      <input type="text" name="genre" placeholder="Enter Genre">
+      <!-- <input type="text" name="genre" placeholder="Enter Genre">  -->
       <input type="text" name="rating" placeholder="Enter Rating">
-      <input type="text" name="actorID" placeholder="Enter Actor ID">
-      <input type="text" name="actorfname" placeholder="Enter Actor First Name">
+      <input type="text" name="price" placeholder="Enter Price">
+      <!-- <input type="text" name="actorfname" placeholder="Enter Actor First Name">
       <input type="text" name="actorlname" placeholder="Enter Actor Last Name">
       <input type="text" name="actorgender" placeholder="Enter Actor Gender">
       <input type="text" name="actorrole" placeholder="Enter Actor Role">
-      <input type="text" name="DirectorID" placeholder="Enter Director ID">
       <input type="text" name="Directorfname" placeholder="Enter Director First Name">
-      <input type="text" name="Directorlname" placeholder="Enter Director Last Name">
+      <input type="text" name="Directorlname" placeholder="Enter Director Last Name">  -->
       <br>
       <button name="sell" type="submit" style = "width: 10%">Sell</button>
     </form>
@@ -79,6 +77,7 @@
         <th >Year</th>
         <th >Rating</th>
         <th >Availability</th>
+        <th >Price</th>
       </tr>
     </thead>
     <tbody>
@@ -89,6 +88,7 @@
           <td> {{user[2]}} </td>
           <td> {{user[3]}} </td>
           <td> {{user[4]}} </td>
+          <td> {{user[5]}} </td>
         </tr>
         {% endfor %}
       </tbody>
