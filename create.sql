@@ -34,9 +34,9 @@ CREATE TABLE movies (
   id SERIAL NOT NULL,
   name varchar(100) NOT NULL,
   year int DEFAULT NULL,
-  rating float default NULL,
+  rating float default NULL CHECK (rating>=0 OR rating<=10),
   availability boolean DEFAULT FALSE,
-  price int default NULL,
+  price int default NULL CHECK (price >= 0),
   PRIMARY KEY (id)
 );
 
@@ -72,26 +72,32 @@ CREATE TABLE roles (
   CONSTRAINT roles_ibfk_2 FOREIGN KEY (movie_id) REFERENCES movies (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
--- SEQUENCES
+DROP TABLE IF EXISTS purchase_history CASCADE;
+CREATE TABLE purchase_history(
+  movie_id int NOT NULL,
+  purchase_count int DEFAULT 0,
+  PRIMARY KEY (movie_id,purchase_count),
+  CONSTRAINT purhist_fk FOREIGN KEY (movie_id) REFERENCES movies (id) ON DELETE CASCADE ON UPDATE CASCADE
+);
 
--- DROP SEQUENCE IF EXISTS actors_id_seq CASCADE;
--- DROP SEQUENCE IF EXISTS directors_id_seq CASCADE;
--- DROP SEQUENCE IF EXISTS movies_id_seq CASCADE;
 
--- CREATE SEQUENCE actors_id_seq
--- START 1
--- INCREMENT 1
--- MINVALUE 1
--- OWNED BY actors.id;
+CREATE OR REPLACE FUNCTION purchase_history_log()
+RETURNS TRIGGER LANGUAGE plpgsql VOLATILE AS $$
+BEGIN
+IF NEW.availability is FALSE THEN
+ IF NEW.ID NOT IN (SELECT DISTINCT movie_id from purchase_history) THEN
+ INSERT into purchase_history(movie_id, purchase_count) values(NEW.ID ,1);
+ ELSE
+ UPDATE purchase_history
+ SET purchase_count = purchase_count + 1 
+ where movie_id = NEW.ID;
+END IF;
+END IF;
+RETURN NULL;
+END; 
+$$;
 
--- CREATE SEQUENCE directors_id_seq
--- START 1
--- INCREMENT 1
--- MINVALUE 1
--- OWNED BY directors.id;
-
--- CREATE SEQUENCE movies_id_seq
--- START 1
--- INCREMENT 1
--- MINVALUE 1
--- OWNED BY movies.id;
+CREATE OR REPLACE TRIGGER log_purchase_history
+  AFTER UPDATE
+  ON movies
+  FOR EACH ROW EXECUTE PROCEDURE purchase_history_log();   

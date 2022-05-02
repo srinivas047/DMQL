@@ -22,7 +22,7 @@
     <form action="/rent" method="post">
       <input type="text1" name="movieID" placeholder="Enter Movie ID">
       <br>
-      <button name="Rent" type="submit" style = "width: 20%";>Rent!</button>
+      <button name="Rent" type="submit" style = "width: 30%";>Rent!</button>
     </form>
     </div>
     <br>
@@ -31,9 +31,17 @@
       <form action="/getdetails" method="post">
         <input type="text1" name="movieID" placeholder="Enter Movie ID">
         <br>
-        <button name="get" type="submit" style = "width: 20%">Get Details</button>
+        <button name="get" type="submit" style = "width: 30%">Get Details</button>
       </form>
   </div>
+
+  <br>
+  <div id="purchase" style = "margin-left: 4.5%" class = "block">
+    <p style="color: #0074D9; font-weight: bold; font-style: italic;">Get Purchase History</p>
+    <form action="/purchaseHistory" method="post">
+      <button name="get" type="submit" style = "width: 30%">Get History</button>
+    </form>
+</div>
 </div>
   <br>
   <div id="Sell" style = "margin-left: 5%" >
@@ -175,7 +183,7 @@
           <br>
           <select id="director" name="director">
             <option value="">None</option>
-              {% for opt in directordetails %}
+              {% for opt in Topdirectordetails %}
                   <option>
                   {{ opt }}
                   </option>
@@ -222,9 +230,10 @@
       <br>
       </div>
 
-      <p>* Update Movie Rating</p>
+      <p>* Update Movie Details</p>
       <input type="text" name="movieID" placeholder="Enter Movie ID">
       <input type="text" name="movieRating" placeholder="Enter Movie Rating">
+      <input type="text" name="movieAvail" placeholder="Enter Availability">
       <br>
     </div>
         <button name="update" type="submit">Update</button>
