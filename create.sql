@@ -76,7 +76,7 @@ DROP TABLE IF EXISTS purchase_history CASCADE;
 CREATE TABLE purchase_history(
   movie_id int NOT NULL,
   purchase_count int DEFAULT 0,
-  PRIMARY KEY (movie_id,purchase_count),
+  PRIMARY KEY (movie_id),
   CONSTRAINT purhist_fk FOREIGN KEY (movie_id) REFERENCES movies (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
@@ -101,3 +101,22 @@ CREATE OR REPLACE TRIGGER log_purchase_history
   AFTER UPDATE
   ON movies
   FOR EACH ROW EXECUTE PROCEDURE purchase_history_log();   
+
+
+CREATE OR REPLACE FUNCTION actor_gender()
+RETURNS TRIGGER LANGUAGE plpgsql STRICT STABLE AS $$
+BEGIN
+  IF (
+   NEW.gender in ('M','F','NB')
+  ) THEN
+    RETURN NEW;
+  ELSE
+    RAISE EXCEPTION 'Actor gender not in the database';
+  END IF;
+END;
+$$;
+
+CREATE OR REPLACE TRIGGER valid_actor_gender
+  BEFORE INSERT OR UPDATE
+  ON actors
+  FOR EACH ROW EXECUTE PROCEDURE actor_gender();
