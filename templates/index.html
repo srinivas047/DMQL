@@ -10,7 +10,7 @@
 
 </script>
 <div id="mainHeading">
-<h1>Welcome to Movies Rental Application</h1>
+<h1>Welcome to Movies Market Place</h1>
 <hr>
 </div>
 
@@ -50,15 +50,8 @@
       <p>* Enter Movie details</p>
       <input type="text" name="moviename" placeholder="Enter Movie Name">
       <input type="text" name="year" placeholder="Enter Released Year">
-      <!-- <input type="text" name="genre" placeholder="Enter Genre">  -->
       <input type="text" name="rating" placeholder="Enter Rating">
       <input type="text" name="price" placeholder="Enter Price">
-      <!-- <input type="text" name="actorfname" placeholder="Enter Actor First Name">
-      <input type="text" name="actorlname" placeholder="Enter Actor Last Name">
-      <input type="text" name="actorgender" placeholder="Enter Actor Gender">
-      <input type="text" name="actorrole" placeholder="Enter Actor Role">
-      <input type="text" name="Directorfname" placeholder="Enter Director First Name">
-      <input type="text" name="Directorlname" placeholder="Enter Director Last Name">  -->
       <br>
       <button name="sell" type="submit" style = "width: 10%">Sell</button>
       <p id = "movie_id"></p>
@@ -113,8 +106,8 @@
       <div class = "block">
       <label for="actorname">Actor Name</label>
       <br>
-      <select id="actor" name="actor">
-        <option value="">None</option>
+      <select id="actor" name="actor" style="width: 50%;">
+        <option value="">Select an Option</option>
           {% for opt in actordetails %}
               <option>
               {{ opt }}
@@ -127,8 +120,8 @@
       <div class = "block">
       <label for="directorname">Director Name</label>
       <br>
-      <select id="director" name="director">
-        <option value="">None</option>
+      <select id="director" name="director" style="width: 50%;">
+        <option value="">Select an Option</option>
           {% for opt in directordetails %}
               <option>
               {{ opt }}
@@ -143,8 +136,8 @@
       <div class = "block">
       <label for="year">Year</label>
       <br>
-      <select id="year" name="year">
-        <option value="">None</option>
+      <select id="year" name="year" style="width: 50%;">
+        <option value="">Select an Option</option>
           {% for opt in movies_genresdetails %}
               <option>
               {{ opt }}
@@ -157,8 +150,8 @@
       <div class = "block">
         <label for="genre">Genre</label>
         <br>
-        <select id="genre" name="genre">
-          <option value="">None</option>
+        <select id="genre" name="genre" style="width: 50%;">
+          <option value="">Select an Option</option>
             {% for opt in genredetails %}
                 <option>
                 {{ opt }}
@@ -182,7 +175,7 @@
         <label for="director">Select Director</label>
           <br>
           <select id="director" name="director">
-            <option value="">None</option>
+            <option value="">Select an Option</option>
               {% for opt in Topdirectordetails %}
                   <option>
                   {{ opt }}
@@ -201,7 +194,7 @@
         <label for="genres">Select Genre</label>
           <br>
           <select id="genres" name="genres">
-            <option value="">None</option>
+            <option value="">Select an Option</option>
               {% for opt in genredetails %}
                   <option>
                   {{ opt }}
@@ -242,10 +235,18 @@
       <br>
     
       <div id="Q6" style="margin-left:4.5%;">
-        <p style="color: #0074D9; font-weight: bold; font-style: italic;">6: Delete a movie</p>
+        <p style="color: #0074D9; font-weight: bold; font-style: italic;">6: Delete Records</p>
         <hr style="width: 30%; margin-left:0%;">
         <form action="/delete" method="post">
-          <input type="text" name="movieID" placeholder="Enter Movie ID">
+          <label for="req">Select relation</label>
+          <br>
+          <select id="req" name="req">
+            <option value="">Select an Option</option>
+            <option value="movie">Movie</option>
+            <option value="director">Director</option>
+            <option value="actor">Actor</option>
+          </select>
+          <input type="text" name="ID" placeholder="Enter ID">
           <br>
           <button name="delete" type="submit">Delete</button>
         </form>

@@ -253,6 +253,44 @@ def recommendations():
             val = (actor_name, director_name)
             TopMovies = get_movieDetails(sql, val)
 
+        if actor_name != "":
+            sql = """select B.movie_id, c.name, c.rating, d.genre, c.availability,c.year from actors A
+                    inner join roles B on A.id = B.actor_id
+                    inner join movies c on B.movie_id = c.id
+                    inner join movies_genres d on b.movie_id = d.movie_id
+                    where a.last_name = %s"""
+            val = (actor_name,)
+            TopMovies = get_movieDetails(sql, val)
+
+        if director_name != "":
+            sql = """select c.id, c.name, c.rating, d.genre, c.availability,c.year from movies c
+                    inner join movies_genres d on c.id = d.movie_id
+                    inner join movies_directors e on c.id = e.movie_id
+                    inner join directors f on e.director_id = f.id
+                    where f.last_name = %s """
+            val = (director_name,)
+            TopMovies = get_movieDetails(sql, val)
+        
+        if director_name != "" and genre != "":
+            sql = """select c.id, c.name, c.rating, d.genre, c.availability,c.year from movies c
+                    inner join movies_genres d on c.id = d.movie_id
+                    inner join movies_directors e on c.id = e.movie_id
+                    inner join directors f on e.director_id = f.id
+                    where f.last_name = %s 
+                    and genre = %s"""
+            val = (director_name, genre)
+            TopMovies = get_movieDetails(sql, val)
+
+        if actor_name != "" and genre != "":
+            sql = """select B.movie_id, c.name, c.rating, d.genre, c.availability,c.year from actors A
+                    inner join roles B on A.id = B.actor_id
+                    inner join movies c on B.movie_id = c.id
+                    inner join movies_genres d on b.movie_id = d.movie_id
+                    where a.last_name = %s
+                    and genre = %s"""
+            val = (actor_name, genre)
+            TopMovies = get_movieDetails(sql, val)
+
         return render_template('TopMovies.html', TopMovies=TopMovies)
 
 # Get Top Five Directors
@@ -345,12 +383,19 @@ def update():
 def delete():
     if request.method == 'POST':
 
-        movieID = request.form['movieID']    
+        ID = request.form['ID']    
+        req = request.form['req']  
         conn = connectdb()
         cur = conn.cursor()
 
-        sql = "DELETE FROM movies WHERE id = %s"
-        val = (movieID,)
+        if req == 'movie':
+            sql = "DELETE FROM movies WHERE id = %s"
+        elif req == 'director':
+            sql = "DELETE FROM directors WHERE id = %s"
+        else:
+            sql = "DELETE FROM actors WHERE id = %s"
+
+        val = (ID,)
         cur.execute(sql, val)
         conn.commit()
 
