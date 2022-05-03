@@ -90,3 +90,17 @@ input[type=text], select {
   select {
     width:20%; 
   }
+
+  body{ 
+    background-image:url(); 
+  } 
+
+  .multi-bg-example {
+    /* background-image: url('https://image.freepik.com/free-vector/abstract-background-with-a-watercolor-texture_1048-2144.jpg'); */
+    background-image: url('test3.jpg');
+    background-repeat: no-repeat,
+        no-repeat,
+        no-repeat;
+    background-size: cover;
+    background-position: left;
+  }

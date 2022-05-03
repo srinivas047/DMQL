@@ -16,7 +16,7 @@ def connectdb():
         password='Srinivas@047')
     return conn
 
-def get_movieDetails(sql, val):
+def get_queryResults(sql, val):
     conn = connectdb()
     cur = conn.cursor()
     cur.execute(sql, val)
@@ -31,80 +31,74 @@ def Initialize():
     conn = connectdb()
     cur = conn.cursor()
     cur.execute(""" select A.last_name from actors A
-inner join roles B on A.id = B.actor_id
-inner join movies c on B.movie_id = c.id
-inner join movies_genres d on b.movie_id = d.movie_id
-inner join movies_directors e on b.movie_id = e.movie_id
-inner join directors f on e.director_id = f.id
-order by A.first_name ASC, f.first_name ASC, c.year DESC, d.genre ASC
-LIMIT 1000 """)
+                    inner join roles B on A.id = B.actor_id
+                    inner join movies c on B.movie_id = c.id
+                    inner join movies_genres d on b.movie_id = d.movie_id
+                    inner join movies_directors e on b.movie_id = e.movie_id
+                    inner join directors f on e.director_id = f.id
+                    order by A.first_name ASC, f.first_name ASC, c.year DESC, d.genre ASC
+                    LIMIT 1000 """)
     actorslastnames1 = cur.fetchall()
 
     actorslastnames = []
-
     for item in actorslastnames1:
          if item not in actorslastnames:
              actorslastnames.append(item)
-    # actorslastnames = np.unique(actorslastnames)
 
 
     cur.execute(""" select f.last_name from actors A
-inner join roles B on A.id = B.actor_id
-inner join movies c on B.movie_id = c.id
-inner join movies_genres d on b.movie_id = d.movie_id
-inner join movies_directors e on b.movie_id = e.movie_id
-inner join directors f on e.director_id = f.id
-order by A.first_name ASC, f.first_name ASC, c.year DESC, d.genre ASC
-LIMIT 1000 """)
+                    inner join roles B on A.id = B.actor_id
+                    inner join movies c on B.movie_id = c.id
+                    inner join movies_genres d on b.movie_id = d.movie_id
+                    inner join movies_directors e on b.movie_id = e.movie_id
+                    inner join directors f on e.director_id = f.id
+                    order by A.first_name ASC, f.first_name ASC, c.year DESC, d.genre ASC
+                    LIMIT 1000 """)
     directorslastnames1 = cur.fetchall()
 
     directorslastnames = []
-
     for item in directorslastnames1:
          if item not in directorslastnames:
              directorslastnames.append(item)
 
+
     cur.execute("""SELECT DISTINCT C.first_name from movies A, movies_directors B, directors C 
-    where A.id = B.movie_id and B.director_id = C.id group by C.first_name having count(B.movie_id) > 5 LIMIT 1000""")
+                    where A.id = B.movie_id and B.director_id = C.id group by C.first_name 
+                    having count(B.movie_id) > 5 LIMIT 1000""")
     Topdirectordetails1 = cur.fetchall()
 
     cur.execute("""select c.year from actors A
-inner join roles B on A.id = B.actor_id
-inner join movies c on B.movie_id = c.id
-inner join movies_genres d on b.movie_id = d.movie_id
-inner join movies_directors e on b.movie_id = e.movie_id
-inner join directors f on e.director_id = f.id
-order by A.first_name ASC, f.first_name ASC, c.year DESC, d.genre ASC
-LIMIT 1000""")
+                    inner join roles B on A.id = B.actor_id
+                    inner join movies c on B.movie_id = c.id
+                    inner join movies_genres d on b.movie_id = d.movie_id
+                    inner join movies_directors e on b.movie_id = e.movie_id
+                    inner join directors f on e.director_id = f.id
+                    order by A.first_name ASC, f.first_name ASC, c.year DESC, d.genre ASC
+                    LIMIT 1000""")
     moviesyear1 = cur.fetchall()
 
     moviesyear = []
-
     for item in moviesyear1:
          if item not in moviesyear:
              moviesyear.append(item)
 
     cur.execute("""select d.genre from actors A
-inner join roles B on A.id = B.actor_id
-inner join movies c on B.movie_id = c.id
-inner join movies_genres d on b.movie_id = d.movie_id
-inner join movies_directors e on b.movie_id = e.movie_id
-inner join directors f on e.director_id = f.id
-order by A.first_name ASC, f.first_name ASC, c.year DESC, d.genre ASC
-LIMIT 1000""")
+                    inner join roles B on A.id = B.actor_id
+                    inner join movies c on B.movie_id = c.id
+                    inner join movies_genres d on b.movie_id = d.movie_id
+                    inner join movies_directors e on b.movie_id = e.movie_id
+                    inner join directors f on e.director_id = f.id
+                    order by A.first_name ASC, f.first_name ASC, c.year DESC, d.genre ASC
+                    LIMIT 1000""")
     movies_genres1 = cur.fetchall()
 
     movies_genres = []
-
     for item in movies_genres1:
          if item not in movies_genres:
              movies_genres.append(item)
 
     cur.execute("SELECT * from movies where rating is not NULL and availability = 'True' order by rating DESC LIMIT 100;")
     movies = cur.fetchall()
-    # print(movies[:5])
-
-    # print(actorslastnames[:5])
 
     actordetails = []
     for i in actorslastnames:
@@ -133,28 +127,32 @@ LIMIT 1000""")
 def rent():
     if request.method == 'POST':
         movieID = request.form['movieID']
-        conn = connectdb()
-        cur = conn.cursor()
-        sql = "UPDATE movies SET availability = 'False' WHERE id = %s"
-        val = (movieID,)
-        cur.execute(sql, val)
-        conn.commit()
 
-        return "Movie Rented Successfully!!"
+
+        sql1 = "select availability from movies WHERE id = %s"
+        val1 = (movieID,)
+        availability =  get_queryResults(sql1, val1)[0][0]
+
+        if availability == False:
+            return "Movie is already rented!!"
+        else:
+            conn = connectdb()
+            cur = conn.cursor()
+            sql = "UPDATE movies SET availability = 'False' WHERE id = %s"
+            val = (movieID,)
+            cur.execute(sql, val)
+            conn.commit()
+
+            return "Movie Rented Successfully!!"
 
 # Getting Movie Details
 @app.route('/getdetails', methods=('GET', 'POST'))
 def getdetails():
     if request.method == 'POST':
-        
         movieID = request.form['movieID']
-        conn = connectdb()
-        cur = conn.cursor()
         sql = "SELECT * from movies where id = %s" 
         val = (movieID,)
-        cur.execute(sql, val)
-        moviedetails = cur.fetchall()
-
+        moviedetails = get_queryResults(sql, val)
         return render_template('GetDetails.html', moviedetails=moviedetails)
 
 @app.route('/purchaseHistory', methods=('GET', 'POST'))
@@ -172,38 +170,20 @@ def purchaseHistory():
 @app.route("/sell", methods=['POST'])
 def sell():
     if request.method == 'POST':
-
         moviename = request.form['moviename']
         year = request.form['year']
-        # genre = request.form['genre']
         rating = request.form['rating']
         price = request.form['price']
         availability = 'True'
-
-        # actorfname = request.form['actorfname']
-        # actorlname = request.form['actorlname']
-        # actorgender = request.form['actorgender']
-        # actorrole = request.form['actorrole']
-        # directorfname = request.form['directorfname']
-        # directorlname = request.form['directorlname']
     
         conn = connectdb()
         cur = conn.cursor()
-        # cur.execute("INSERT INTO actors (actorID, actorfname, actorlname, id) VALUES (%s, %s, %s, %s)")
 
         # Inserting Movie
         sql1 = "INSERT INTO movies (name, year, rating, availability, price) VALUES (%s, %s, %s, %s, %s)"
         val1 = (moviename, year, rating, availability, price)
         cur.execute(sql1, val1)
-
         conn.commit()
-
-
-        # sql2 = "SELECT id from movies where name= %s and year = %s and rating = %s and availability = %s and price = %s"
-        # val2 = (moviename, year, rating, availability, price)
-        # cur.execute(sql2, val2)
-
-        # conn.commit()
 
     return "Movie Added Successfully!!"
 
@@ -239,7 +219,7 @@ def recommendations():
                     and c.year = %s
                     and f.last_name = %s """
             val = (genre, actor_name, year,director_name)
-            TopMovies = get_movieDetails(sql, val)
+            TopMovies = get_queryResults(sql, val)
 
         if actor_name != "" and director_name != "":
             sql = """select B.movie_id, c.name, c.rating, d.genre, c.availability,c.year from actors A
@@ -251,7 +231,7 @@ def recommendations():
                     where a.last_name = %s
                     and f.last_name = %s """
             val = (actor_name, director_name)
-            TopMovies = get_movieDetails(sql, val)
+            TopMovies = get_queryResults(sql, val)
 
         if actor_name != "":
             sql = """select B.movie_id, c.name, c.rating, d.genre, c.availability,c.year from actors A
@@ -260,7 +240,7 @@ def recommendations():
                     inner join movies_genres d on b.movie_id = d.movie_id
                     where a.last_name = %s"""
             val = (actor_name,)
-            TopMovies = get_movieDetails(sql, val)
+            TopMovies = get_queryResults(sql, val)
 
         if director_name != "":
             sql = """select c.id, c.name, c.rating, d.genre, c.availability,c.year from movies c
@@ -269,7 +249,7 @@ def recommendations():
                     inner join directors f on e.director_id = f.id
                     where f.last_name = %s """
             val = (director_name,)
-            TopMovies = get_movieDetails(sql, val)
+            TopMovies = get_queryResults(sql, val)
         
         if director_name != "" and genre != "":
             sql = """select c.id, c.name, c.rating, d.genre, c.availability,c.year from movies c
@@ -279,7 +259,7 @@ def recommendations():
                     where f.last_name = %s 
                     and genre = %s"""
             val = (director_name, genre)
-            TopMovies = get_movieDetails(sql, val)
+            TopMovies = get_queryResults(sql, val)
 
         if actor_name != "" and genre != "":
             sql = """select B.movie_id, c.name, c.rating, d.genre, c.availability,c.year from actors A
@@ -289,7 +269,7 @@ def recommendations():
                     where a.last_name = %s
                     and genre = %s"""
             val = (actor_name, genre)
-            TopMovies = get_movieDetails(sql, val)
+            TopMovies = get_queryResults(sql, val)
 
         return render_template('TopMovies.html', TopMovies=TopMovies)
 
@@ -298,15 +278,11 @@ def recommendations():
 def TopfiveDirectors():
     if request.method == 'POST':
         first_name = request.form['director']
-        conn = connectdb()
-        cur = conn.cursor() 
         sql = """SELECT A.*, B.director_id, C.first_name, C.last_name from movies A, movies_directors B, 
         directors C where A.id = B.movie_id and B.director_id = C.id and rating is not NULL and C.first_name = %s 
         order by A.rating DESC LIMIT 5"""
         val = (first_name,)
-        cur.execute(sql, val)
-        TopfiveDirectors = cur.fetchall()
-        # print(TopfiveDirectors[:5])
+        TopfiveDirectors = get_queryResults(sql, val)
 
         return render_template('TopDirectors.html', TopfiveDirectors=TopfiveDirectors)
 
@@ -315,15 +291,11 @@ def TopfiveDirectors():
 def TopfiveMovies():
     if request.method == 'POST':
         genre = request.form['genres']
-        conn = connectdb()
-        cur = conn.cursor() 
 
         sql = """select M.id, M.name, M.rating, G.genre, M.availability,M.year from movies M, movies_genres G 
-        where M.id = G.movie_id  and rating is not NULL and genre = %s order by rating DESC"""
+        where M.id = G.movie_id  and rating is not NULL and genre = %s order by rating DESC LIMIT 5"""
         val = (genre,)
-        cur.execute(sql, val)
-        TopMovies = cur.fetchall()
-        TopMovies = TopMovies[:5]
+        TopMovies = get_queryResults(sql, val)
 
         return render_template('TopMovies.html', TopMovies=TopMovies)
 
@@ -332,28 +304,15 @@ def TopfiveMovies():
 def update():
     if request.method == 'POST':
 
-        # actorID = request.form['actorID']
-        # actorfname = request.form['actorfname']
-
         directorID = request.form['directorID']
         directorlname = request.form['directorlname']
 
         movieID = request.form['movieID']
         movieRating = request.form['movieRating']
-        
         movieAvail = request.form['movieAvail']
-
-
     
         conn = connectdb()
         cur = conn.cursor()
-        # cur.execute("INSERT INTO actors (actorID, actorfname, actorlname, id) VALUES (%s, %s, %s, %s)")
-
-        # if actorID != "" or actorfname !="":
-        #     sql1 = "UPDATE actors SET first_name = %s WHERE id = %s"
-        #     val1 = (actorfname, actorID)
-        #     cur.execute(sql1, val1)
-
         if directorID != "" and directorlname !="":
             sql2 = "UPDATE directors SET last_name = %s WHERE id = %s"
             val2 = (directorlname, directorID)

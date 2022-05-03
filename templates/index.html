@@ -1,33 +1,36 @@
 <!DOCTYPE html>
 <html>
+
+<!-- Required Scripts -->
 <script type="text/javascript" charset="utf8" src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
 <link rel="stylesheet" type="text/css" href= "{{ url_for('static',filename='styles/style.css') }}">
 <script type="text/javascript" charset="utf8" src= "{{ url_for('static',filename='js/app.js') }}"></script>
-<script>
 
-</script>
-<div id="mainHeading">
-<h1>Welcome to Movies Market Place</h1>
+<!-- Page Heading -->
+<div id="mainHeading" style="background-color: #6c6173;">
+<h1 style="color:   white;">Welcome to Movies Market Place</h1>
 <hr>
 </div>
 
-<!-- ################################################################ Renting ################################################################ -->
-<body>
+<body style="background-color: #EBEDE4;">
+<div class="multi-bg-example">
 <div id = "InputDetails" class = "row">
+  <!-- Renting a Movie -->
   <div id="Rent" style = "margin-left: 4.5%" class = "block">
-    <p style="color: #0074D9; font-weight: bold; font-style: italic;" >Rent a Movie</p>
+    <p style="color: white; font-weight: bold; font-style: italic;" >Rent a Movie</p>
     <form action="/rent" method="post">
       <input type="text1" name="movieID" placeholder="Enter Movie ID">
       <br>
       <button name="Rent" type="submit" style = "width: 30%";>Rent!</button>
     </form>
-    </div>
-    <br>
-    <div id="get" style = "margin-left: 4.5%" class = "block">
-      <p style="color: #0074D9; font-weight: bold; font-style: italic;">Get Movie Details</p>
+  </div>
+
+  <!-- Get Movie Details -->
+  <div id="get" style = "margin-left: 0%" class = "block">
+      <p style="color: white; font-weight: bold; font-style: italic;">Get Movie Details</p>
       <form action="/getdetails" method="post">
         <input type="text1" name="movieID" placeholder="Enter Movie ID">
         <br>
@@ -35,19 +38,20 @@
       </form>
   </div>
 
-  <br>
+  <!-- Get Purchase History -->
   <div id="purchase" style = "margin-left: 4.5%" class = "block">
-    <p style="color: #0074D9; font-weight: bold; font-style: italic;">Get Purchase History</p>
+    <p style="color: white; font-weight: bold; font-style: italic;">Get Purchase History</p>
     <form action="/purchaseHistory" method="post">
       <button name="get" type="submit" style = "width: 30%">Get History</button>
     </form>
+  </div>
 </div>
-</div>
-  <br>
-  <div id="Sell" style = "margin-left: 5%" >
-    <p style="color: #0074D9; font-weight: bold; font-style: italic;">Sell a Movie</p>
+
+<!-- Selling Movie -->
+<div id="Sell" style = "margin-left: 5%" >
+    <p style="color: white; font-weight: bold; font-style: italic;">Sell a Movie</p>
     <form action="/sell" method="post">
-      <p>* Enter Movie details</p>
+      <p style="color: white;">* Enter Movie details</p>
       <input type="text" name="moviename" placeholder="Enter Movie Name">
       <input type="text" name="year" placeholder="Enter Released Year">
       <input type="text" name="rating" placeholder="Enter Rating">
@@ -56,22 +60,21 @@
       <button name="sell" type="submit" style = "width: 10%">Sell</button>
       <p id = "movie_id"></p>
     </form>
-    </div>
-    <br>
 </div>
-<br>
+</div>
 
-<!-- ################################################################Functionalities################################################################ -->
-<div id="headings">
-<h2>Application Functionalities</h2>
+<!-- Functionalities Heading -->
+<div id="headings" style="background-color: #6c6173;">
+<h2 style="color: white">Application Functionalities</h2>
 <hr>
 </div>
 
 <div id="SQL_queries">
+  <!-- Searching Movies -->
   <div id="Q1" style="margin-left:0%">
     <p style="color: #0074D9; font-weight: bold; font-style: italic;">1: Search for a Movie</p>
     <hr style="width: 30%; margin-left:0;">
-    <table id="myTable" class="display" style="width: 95%;">
+    <table id="myTable" class="display" style="width: 95%; margin-left:0;">
       <thead>
       <tr>
         <th >ID</th>
@@ -95,14 +98,16 @@
         {% endfor %}
       </tbody>
     </table>
-    </div>  
+  </div>  
   <br>
-  <p style="color: #0074D9; font-weight: bold; font-style: italic;">2: Recommend Movies</p>
-  <hr style="width: 30%; margin-left:0;">
-  <div id="Q2" style = "margin-left: 0%">
-    <form method="post" action="/recommendations" >
 
-      <div class = "row">
+  <!-- Recommending Movies -->
+  <div id="Q2" style = "margin-left: 0%">
+    <p style="color: #0074D9; font-weight: bold; font-style: italic;">2: Recommend Movies</p>
+    <hr style="width: 30%; margin-left:0;">
+    <form method="post" action="/recommendations" >
+    <div class = "row">
+      <!-- Populating Actor Details -->
       <div class = "block">
       <label for="actorname">Actor Name</label>
       <br>
@@ -116,7 +121,8 @@
       </select>
       </div>
       <br>
-  
+      
+      <!-- Populating Director Details -->
       <div class = "block">
       <label for="directorname">Director Name</label>
       <br>
@@ -130,9 +136,10 @@
       </select>
       </div>
     </div>
-      <br>
+    <br>
   
-      <div class = "row">
+    <div class = "row">
+      <!-- Populating Genre Details -->
       <div class = "block">
       <label for="year">Year</label>
       <br>
@@ -144,9 +151,10 @@
               </option>
           {% endfor %}
       </select>
-    </div>
+      </div>
       <br>
-  
+
+      <!-- Populating Genre Details -->
       <div class = "block">
         <label for="genre">Genre</label>
         <br>
@@ -159,16 +167,16 @@
             {% endfor %}
         </select>
       </div>
-      </div>
-        <br>
-  
-      <input id = 'submit' type="submit" value="Submit" style="margin-left: 0%;">
-      <br>
-    </form>
     </div>
+  
+    <input id = 'submit' type="submit" value="Submit" style="margin-left: 0%;">
     <br>
+    </form>
+  </div>
+  <br>
 
-    <div id="Q3" style="margin-left:0%;">
+  <!-- Top 5 Directors -->
+  <div id="Q3" style="margin-left:0%;">
       <p style="color: #0074D9; font-weight: bold; font-style: italic;">3: Get 5 Top Rated Movies of a Director that are available for rent</p>
       <hr style="width: 30%; margin-left:0;">
       <form action="/TopfiveDirectors" method="post">
@@ -184,10 +192,11 @@
           </select>
         <button name="director" type="submit" class="btn btn-success">Get Top Directors</button>
       </form>
-      </div>  
-    <br>
+  </div>  
+  <br>
 
-    <div id="Q4" style="margin-left:0%;">
+  <!-- Top 5 Movies -->
+  <div id="Q4" style="margin-left:0%;">
       <p style="color: #0074D9; font-weight: bold; font-style: italic;">4: Get 5 Top Rated Movies based on Genre that are available for rent</p>
       <hr style="width: 30%; margin-left:0;">
       <form action="/TopfiveMovies" method="post">
@@ -203,38 +212,37 @@
           </select>
         <button name="genres" type="submit" class="btn btn-success">Get Top Movies</button>
       </form>
-      </div>  
-    <br>
-
-    <div id="Q5">
+  </div>  
+  <br>
+  <!-- Updating Records -->
+  <div id="Q5">
       <p style="color: #0074D9; font-weight: bold; font-style: italic;">5: Update Records</p>
       <hr style="width: 30%; margin-left:0;">
       <form action="/update" method="post">
-      <!-- <div>
-        <p>* Update Actor Last Name</p>
-        <input type="text" name="actorID" placeholder="Enter Actor ID">
-        <input type="text" name="actorfname" placeholder="Enter Actor First Name">
-        <br>
-      </div> -->
-      <div>
-        <p>* Update Director Last Name</p>
-      <input type="text" name="directorID" placeholder="Enter Director ID">
-      <input type="text" name="directorlname" placeholder="Enter Director Last Name">
-      <br>
-      </div>
 
-      <p>* Update Movie Details</p>
-      <input type="text" name="movieID" placeholder="Enter Movie ID">
-      <input type="text" name="movieRating" placeholder="Enter Movie Rating">
-      <input type="text" name="movieAvail" placeholder="Enter Availability">
-      <br>
-    </div>
+      <!-- Update Director Last Name -->
+        <div>
+          <p>* Update Director Last Name</p>
+        <input type="text" name="directorID" placeholder="Enter Director ID">
+        <input type="text" name="directorlname" placeholder="Enter Director Last Name">
+        <br>
+        </div>
+      
+      <!-- Update Movie Details -->
+        <div>
+        <p>* Update Movie Details</p>
+        <input type="text" name="movieID" placeholder="Enter Movie ID">
+        <input type="text" name="movieRating" placeholder="Enter Movie Rating">
+        <input type="text" name="movieAvail" placeholder="Enter Availability">
+        <br>
+        </div>
         <button name="update" type="submit">Update</button>
       </form>
-      </div>
-      <br>
+  </div>
+  <br>
     
-      <div id="Q6" style="margin-left:4.5%;">
+  <!-- Delete Records -->
+  <div id="Q6" style="margin-left:0%;">
         <p style="color: #0074D9; font-weight: bold; font-style: italic;">6: Delete Records</p>
         <hr style="width: 30%; margin-left:0%;">
         <form action="/delete" method="post">
@@ -250,13 +258,8 @@
           <br>
           <button name="delete" type="submit">Delete</button>
         </form>
-        </div>
-        <br>
-
-      
-
-
-
+  </div>
+</div>
 </body>
 </html>
 
