@@ -197,6 +197,7 @@ def recommendations():
         genre = request.form['genre']
 
         if actor_name == "" and director_name == "" and year == "" and genre == "":
+            print("blank")
             sql = """SELECT M.id, M.name, M.rating, G.genre, M.availability, M.year 
             from movies M, movies_genres G where M.id = G.movie_id 
             and rating is not NULL and rating >= '7.5' order by rating DESC LIMIT 5""" 
@@ -208,6 +209,7 @@ def recommendations():
             return render_template('TopMovies.html', TopMovies=TopMovies)
 
         elif actor_name != "" and director_name != "" and year != "" and genre != "":
+            print("All")
             sql = """select B.movie_id, c.name, c.rating, d.genre, c.availability,c.year from actors A
                     inner join roles B on A.id = B.actor_id
                     inner join movies c on B.movie_id = c.id
@@ -221,7 +223,8 @@ def recommendations():
             val = (genre, actor_name, year,director_name)
             TopMovies = get_queryResults(sql, val)
 
-        elif actor_name != "" and director_name != "":
+        elif actor_name != "" and director_name != "" and year == "" and genre == "":
+            print("Actor Director")
             sql = """select B.movie_id, c.name, c.rating, d.genre, c.availability,c.year from actors A
                     inner join roles B on A.id = B.actor_id
                     inner join movies c on B.movie_id = c.id
@@ -233,7 +236,8 @@ def recommendations():
             val = (actor_name, director_name)
             TopMovies = get_queryResults(sql, val)
 
-        elif actor_name != "":
+        elif actor_name != "" and director_name == "" and year == "" and genre == "":
+            print("Only Actor")
             sql = """select B.movie_id, c.name, c.rating, d.genre, c.availability,c.year from actors A
                     inner join roles B on A.id = B.actor_id
                     inner join movies c on B.movie_id = c.id
@@ -242,7 +246,8 @@ def recommendations():
             val = (actor_name,)
             TopMovies = get_queryResults(sql, val)
 
-        elif director_name != "":
+        elif director_name != "" and actor_name == "" and year == "" and genre == "":
+            print("Only Director")
             sql = """select c.id, c.name, c.rating, d.genre, c.availability,c.year from movies c
                     inner join movies_genres d on c.id = d.movie_id
                     inner join movies_directors e on c.id = e.movie_id
@@ -251,7 +256,8 @@ def recommendations():
             val = (director_name,)
             TopMovies = get_queryResults(sql, val)
         
-        elif director_name != "" and genre != "":
+        elif director_name != "" and genre != "" and actor_name == "" and year == "":
+            print("Director Genre")
             sql = """select c.id, c.name, c.rating, d.genre, c.availability,c.year from movies c
                     inner join movies_genres d on c.id = d.movie_id
                     inner join movies_directors e on c.id = e.movie_id
@@ -261,7 +267,8 @@ def recommendations():
             val = (director_name, genre)
             TopMovies = get_queryResults(sql, val)
 
-        elif actor_name != "" and genre != "":
+        elif actor_name != "" and genre != "" and director_name == "" and year == "":
+            print("Actor Genre")
             sql = """select B.movie_id, c.name, c.rating, d.genre, c.availability,c.year from actors A
                     inner join roles B on A.id = B.actor_id
                     inner join movies c on B.movie_id = c.id
