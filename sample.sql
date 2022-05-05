@@ -55,6 +55,9 @@ select B.movie_id, c.name, c.rating, d.genre, c.availability,c.year from actors 
 					
 
 -- List all indexes
-select *
-from pg_indexes
-where tablename not like 'pg%';
+SELECT 
+    conname, contype, conindid::regclass 
+FROM 
+    pg_constraint 
+WHERE 
+    contype = 'p';
